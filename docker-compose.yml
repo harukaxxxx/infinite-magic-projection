@@ -1,0 +1,7 @@
+version: '1'
+services:
+  discord-bot:
+    build:
+      context: .
+    environment:
+      - DISCORD_TOKEN=YOUR_DISCORD_TOKEN_VALUE
