@@ -39,7 +39,7 @@ def generate_spell(input_text):
     '⚡✨Fulgurante Lumine✨⚡',
     '🌺🌟Harmonia Elysium🌟🌺',
     '🌌✨Luminara Effervescens✨🌌',
-     '🌸✨Flora Viventia✨🌸',
+    '🌸✨Flora Viventia✨🌸',
     '🔥🌪️Ignis Turbinis🌪️🔥',
     '🌟🌌Stellae Infinitas🌌🌟',
     '⚡🌊Fulgor Aqua🌊⚡',
@@ -167,7 +167,9 @@ class MyClient(discord.Client):
 
                     # Building DM embed message
                     dm_channel = await reaction_member.create_dm()
-                    embed=discord.Embed(title=f"『{generate_spell('attachment.id')}』", description="",colour=discord.Colour.from_rgb(127, 0, 32),url=message_link)
+                    title=f"『{generate_spell(str(attachment.id))}』"
+                    color=discord.Colour.from_rgb(127, 0, 32)
+                    embed=discord.Embed(title=title, description="",colour=color,url=message_link)
                     
                     # Setup prompt field
                     prompt_list = split_prompt(prompts)
