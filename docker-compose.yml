@@ -1,8 +1,9 @@
 version: '1'
 services:
   discord-bot:
+    container_name: infinite-magic-projection
     build:
-      context: .
+      context: https://github.com/harukaxxxx/infinite-magic-projection.git
     environment:
       - DISCORD_TOKEN=YOUR_DISCORD_TOKEN_VALUE
       - TRIGGER_REACTION=ℹ️
