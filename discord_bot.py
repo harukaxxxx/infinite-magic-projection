@@ -116,11 +116,11 @@ def extra_parameter(parameter,scope):
 
 class MyClient(discord.Client):
     async def on_ready(self):
-        print(f'Logged in as {self.user} (ID: {self.user.id})')
+        print(f'Logged in as {self.user} (ID: {self.user.id})', flush=True)
         invite_url = discord.utils.oauth_url(
             client_id=self.application_id, permissions=discord.Permissions(permissions=2419452944))
-        print(f'Invite url is {invite_url}')
-        print('------')
+        print(f'Invite url is {invite_url}', flush=True)
+        print('------', flush=True)
 
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent,):
         if payload.emoji.name==trigger_reaction:
@@ -234,6 +234,7 @@ class MyClient(discord.Client):
 
                     # Send DM
                     await dm_channel.send(embed=embed)
+                    print(f'DM sent to {reaction_member.name}.', flush=True)
             else:
                 await message.remove_reaction(trigger_reaction, reaction_member)
 
