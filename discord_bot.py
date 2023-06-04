@@ -84,8 +84,15 @@ def split_prompt(prompt):
         parts = prompt.split(',')
         result_list = []
         temp = ""
+
+        slice_num = len(prompt)/math.ceil(len(prompt)/1024)
+        if slice_num*1.1 >= 1024:
+            slice_num = 1024
+        else:
+            slice_num=slice_num*1.1
+
         for part in parts:
-            if len(temp) + len(part) <= len(prompt)/math.ceil(len(prompt)/1024):
+            if len(temp) + len(part) <= slice_num:
                 temp += part + ","
             else:
                 result_list.append(temp)
@@ -96,6 +103,16 @@ def split_prompt(prompt):
         result_list = [prompt]
 
     return result_list
+
+def extra_parameter(parameter,scope):
+    start_index = parameter.find(scope)
+    if start_index > 0:
+        parameter_length = parameter[start_index:len(parameter)].find(',')
+        if parameter_length < 0 :
+            parameter_length = len(parameter)
+        return parameter[start_index+len(scope):start_index+parameter_length]
+    else:
+        return '-'
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -109,6 +126,7 @@ class MyClient(discord.Client):
         if payload.emoji.name=='ℹ️':
             reaction_member = payload.member
             channel = self.get_channel(payload.channel_id)
+            channel_name = channel.name
             message = await channel.fetch_message(int(payload.message_id))
             message_link = message.jump_url
             guild = message.guild
@@ -158,12 +176,12 @@ class MyClient(discord.Client):
                         await message.remove_reaction('ℹ️', reaction_member)
                         await message.add_reaction('❎')
 
-                    # Process parameter
-                    start_index = parameter.find('Negative prompt: ')
-                    end_index = parameter.find("\n", start_index)
-                    prompts = parameter[0:start_index]
-                    nprompts = parameter[start_index+17:end_index]
-                    extras = parameter[end_index:len(parameter)]
+                    # Process parameter                 
+                    nprompt_index = parameter.find('Negative prompt: ')
+                    steps_index = parameter.find('Steps: ')
+                    prompts = parameter[0:nprompt_index]
+                    nprompts = parameter[nprompt_index+17:steps_index]
+                    extras = parameter[steps_index:len(parameter)]
 
                     # Building DM embed message
                     dm_channel = await reaction_member.create_dm()
@@ -175,30 +193,44 @@ class MyClient(discord.Client):
                     prompt_list = split_prompt(prompts)
                     if len(prompt_list) > 1:
                         for i,prompt in enumerate(prompt_list, 1):
-                            embed.add_field(name=f"提示詞 {i}", value=prompt,inline=False)
+                            embed.add_field(name=f"Prompt {i}", value=prompt,inline=False)
                     else:
-                        embed.add_field(name="提示詞", value=prompts,inline=False)
+                        embed.add_field(name="Prompt", value=prompts,inline=False)
                     
                     # Setup negtive prompt field
                     nprompt_list = split_prompt(nprompts)
                     if len(nprompt_list) > 1:
                         for i,nprompt in enumerate(nprompt_list, 1):
-                            embed.add_field(name=f"反向提示詞 {i}", value=nprompt,inline=False)
+                            embed.add_field(name=f"Negative Prompt {i}", value=nprompt,inline=False)
                     else:
-                        embed.add_field(name="反向提示詞", value=nprompts,inline=False)
-                    
+                        embed.add_field(name="Negative Prompt", value=nprompts,inline=False)
+
+                    # Setup parameter field
+                    parameter_fields = ["Steps","CFG scale","Seed","Sampler","Model","Model hash","Size","Version","Hires upscale","Hires steps","Hires upscaler","Denoising strength"]
+                    embed.add_field(name='Parameters', value='',inline=False)
+                    for field in parameter_fields:
+                        # check if Hires exist print hires info else break loop
+                        if field == 'Hires upscale' and parameter.find('Hires upscale: ') < 0:
+                            break
+                        elif field == 'Hires upscale':
+                            embed.add_field(name='Hires info', value='',inline=False)
+                        embed.add_field(name=field, value=extra_parameter(parameter,f'{field}: '))
+
                     # Setup extra field
+                    for field in parameter_fields:
+                        extras = extras.replace(f'{field}: {extra_parameter(parameter,f"{field}: ")}, ',"")
+                        extras = extras.replace(f'{field}: {extra_parameter(parameter,f"{field}: ")}',"")
                     extra_list = split_prompt(extras)
                     if len(extra_list) > 1:
                         for i,extra in enumerate(extra_list, 1):
-                            embed.add_field(name=f"其他資訊 {i}", value=extra,inline=False)
+                            embed.add_field(name=f"extra info {i}", value=extra,inline=False)
                     else:
-                        embed.add_field(name="其他資訊", value=extras,inline=False)
-
+                        embed.add_field(name="extra info", value=extras,inline=False)
+                    
                     # Setup other embed elements
                     embed.set_image(url=attachment.url)
                     embed.set_author(name=author_name,icon_url=author_avatar_url)
-                    embed.set_footer(text=f'來自{guild_name}',icon_url=guild_icon_url)
+                    embed.set_footer(text=f'from「{guild_name}」{channel_name}channel',icon_url=guild_icon_url)
 
                     # Send DM
                     await dm_channel.send(embed=embed)
