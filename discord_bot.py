@@ -6,6 +6,8 @@ import random
 import discord
 from PIL import Image
 from dotenv import load_dotenv
+load_dotenv()
+trigger_reaction = os.getenv('TRIGGER_REACTION')
 
 def generate_spell(input_text):
     magic_spells = [
@@ -76,8 +78,6 @@ def generate_spell(input_text):
     return random_spell
 
 
-
-
 def split_prompt(prompt):
     if len(prompt) > 1024:
         
@@ -123,7 +123,7 @@ class MyClient(discord.Client):
         print('------')
 
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent,):
-        if payload.emoji.name=='ℹ️':
+        if payload.emoji.name==trigger_reaction:
             reaction_member = payload.member
             channel = self.get_channel(payload.channel_id)
             channel_name = channel.name
@@ -167,13 +167,13 @@ class MyClient(discord.Client):
                                 parameter = img.info['parameters']
                             except KeyError:
                                 # Parameters not found
-                                await message.remove_reaction('ℹ️', reaction_member)
+                                await message.remove_reaction(trigger_reaction, reaction_member)
                                 await message.add_reaction('❎')
                                 continue
 
                     else:
                         # Not a PNG file
-                        await message.remove_reaction('ℹ️', reaction_member)
+                        await message.remove_reaction(trigger_reaction, reaction_member)
                         await message.add_reaction('❎')
 
                     # Process parameter                 
@@ -235,12 +235,11 @@ class MyClient(discord.Client):
                     # Send DM
                     await dm_channel.send(embed=embed)
             else:
-                await message.remove_reaction('ℹ️', reaction_member)
+                await message.remove_reaction(trigger_reaction, reaction_member)
 
 intents = discord.Intents.default()
 intents.message_content = True
 
 
 client = MyClient(intents=intents)
-load_dotenv()
 client.run(os.getenv('DISCORD_TOKEN'))
