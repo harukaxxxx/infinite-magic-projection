@@ -101,7 +101,7 @@ class MyClient(discord.Client):
     async def on_ready(self):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         invite_url = discord.utils.oauth_url(
-            client_id=1114205027616178256, permissions=discord.Permissions(permissions=2419452944))
+            client_id=self.application_id, permissions=discord.Permissions(permissions=2419452944))
         print(f'Invite url is {invite_url}')
         print('------')
 
