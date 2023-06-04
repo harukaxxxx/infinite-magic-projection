@@ -5,3 +5,4 @@ services:
       context: .
     environment:
       - DISCORD_TOKEN=YOUR_DISCORD_TOKEN_VALUE
+      - TRIGGER_REACTION=ℹ️
