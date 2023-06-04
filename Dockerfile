@@ -5,8 +5,7 @@ FROM python:3.10.10
 WORKDIR /app
 
 # Check if discord_bot.py exists and update the repository if necessary
-RUN git -C /app pull origin main; \
-    pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Run your Discord.py application inside the container
 CMD [ "python", "discord_bot.py" ]
