@@ -233,7 +233,13 @@ class MyClient(discord.Client):
                     embed.set_footer(text=f'from「{guild_name}」{channel_name}channel',icon_url=guild_icon_url)
 
                     # Send DM
-                    await dm_channel.send(embed=embed)
+                    if len(embed) >= 6000:
+                        await dm_channel.send(content=f"Infinite Magic Projection has exceeded its capacity, Celefira is running out of mana!\n{message_link}")
+                        # DM limit exceeded
+                        await message.remove_reaction(trigger_reaction, reaction_member)
+                        await message.add_reaction('❎')
+                    else:
+                        await dm_channel.send(embed=embed)
                     print(f'DM sent to {reaction_member.name}.', flush=True)
             else:
                 await message.remove_reaction(trigger_reaction, reaction_member)
