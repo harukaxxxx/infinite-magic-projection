@@ -71,3 +71,16 @@ def split_prompt(prompt):
         result_list = [prompt]
 
     return result_list
+
+
+def load_guild_params(guild_id, param_id):
+    guild_config_path = './config/guild_config.json'
+    default_config_path = './config/config.json'
+    if guild_id == 'default_guild' or not os.path.exists(guild_config_path):
+        with open(default_config_path, 'r', encoding="utf-8") as file:
+            data = json.load(file)
+            return data[guild_id][param_id]
+    else:
+        with open(guild_config_path, 'r', encoding="utf-8") as file:
+            data = json.load(file)
+            return data[guild_id][param_id]

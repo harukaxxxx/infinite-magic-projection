@@ -6,7 +6,7 @@ from modules import utils
 from dotenv import load_dotenv
 
 load_dotenv()
-trigger_reaction = os.getenv('TRIGGER_REACTION')
+TRIGGER_REACTION = utils.load_guild_params('default_guild', 'trigger_reaction')
 
 
 class MyClient(discord.Client):
@@ -22,7 +22,8 @@ class MyClient(discord.Client):
         self,
         payload: discord.RawReactionActionEvent,
     ):
-        if payload.emoji.name == trigger_reaction:
+
+        if payload.emoji.name == TRIGGER_REACTION:
             reaction_member = payload.member
             channel = self.get_channel(payload.channel_id)
             channel_name = channel.name
@@ -65,13 +66,13 @@ class MyClient(discord.Client):
                                 parameter = img.info['parameters']
                             except KeyError:
                                 # Parameters not found
-                                await message.remove_reaction(trigger_reaction, reaction_member)
+                                await message.remove_reaction(TRIGGER_REACTION, reaction_member)
                                 await message.add_reaction('❎')
                                 continue
 
                     else:
                         # Not a PNG file
-                        await message.remove_reaction(trigger_reaction, reaction_member)
+                        await message.remove_reaction(TRIGGER_REACTION, reaction_member)
                         await message.add_reaction('❎')
 
                     # Process parameter
@@ -147,16 +148,16 @@ class MyClient(discord.Client):
                     if len(embed) >= 6000:
                         await dm_channel.send(
                             content=
-                            f"Infinite Magic Projection has exceeded its capacity, Celefira is running out of mana!\n{message_link}"
+                            f"Infinite Magic Projection has exceeded its capacity, Cielifra is running out of mana!\n{message_link}"
                         )
                         # DM limit exceeded
-                        await message.remove_reaction(trigger_reaction, reaction_member)
+                        await message.remove_reaction(TRIGGER_REACTION, reaction_member)
                         await message.add_reaction('❎')
                     else:
                         await dm_channel.send(embed=embed)
                     print(f'DM sent to {reaction_member.name}.', flush=True)
             else:
-                await message.remove_reaction(trigger_reaction, reaction_member)
+                await message.remove_reaction(TRIGGER_REACTION, reaction_member)
 
 
 intents = discord.Intents.default()
