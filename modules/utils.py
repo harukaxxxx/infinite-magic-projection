@@ -7,11 +7,21 @@ import json
 
 def generate_spell(input_text):
     magic_spells = [
-        '⚡✨Zephyrus Alakazamia✨⚡', '🌟✨Lumina Seraphicus✨🌟', '🌌🌟Astra Eternus🌟🌌', '🌙✨Mysticus Vorpalus✨🌙', '🔥✨Solarius Incantatio✨🔥', '🌪️✨Aquilo Spiralis✨🌪️', '🐉🔥Ignis Draconis🔥🐉', '🌿🌳Veridia Arborum🌳🌿', '🌌⭐Celestis Mirabilis⭐🌌', '🌑🌙Umbra Nocturna🌙🌑',
-        '✨⚡Divinus Fulgor⚡✨', '🌧️🌊Tempestas Fluvius🌊🌧️', '🌍🌱Terra Vitalis🌱🌍', '🦅✨Volatus Levitas✨🦅', '🔮✨Arcanus Omnipotens✨🔮', '💜✨Amethysta Magica✨💜', '🛡️✨Fortis Protego✨🛡️', '❓🌌Enigma Invisus🌌❓', '⚔️🌌Bellum Caelum🌌⚔️', '🌳🌿Sylva Perpetua🌿🌳',
-        '🔥🌌Flamara Infernalis🌌🔥', '✨🌌Aetherius Radiance🌌✨', '🌐🔗Meridianus Nexus🔗🌐', '🌈🌌Spectra Illusionis🌌🌈', '🌌🔮Nexus Portentia🔮🌌', '🕊️🌬️Volucris Velocitas🌬️🕊️', '🔮🌌Mirus Transmutatio🌌🔮', '⚡✨Fulgurante Lumine✨⚡', '🌺🌟Harmonia Elysium🌟🌺',
-        '🌌✨Luminara Effervescens✨🌌', '🌸✨Flora Viventia✨🌸', '🔥🌪️Ignis Turbinis🌪️🔥', '🌟🌌Stellae Infinitas🌌🌟', '⚡🌊Fulgor Aqua🌊⚡', '🌑🦉Umbra Noctua🦉🌑', '🌞🌙Lux Lunaris🌙🌞', '🍃✨Aura Vitalis✨🍃', '🔮🌌Magia Arcana🌌🔮', '🌹✨Rosaceus Lumina✨🌹', '🌌🗝️Cosmos Clavis🗝️🌌',
-        '🌪️🌊Tempestas Mare🌊🌪️', '🔥⚔️Ignis Gladius⚔️🔥', '🌈🔮Iris Divinatio🔮🌈', '💫✨Siderea Splendor✨💫', '🌙🦋Noctis Papilio🦋🌙', '🔥🌿Ignis Herba🌿🔥', '⚡🌪️Fulgur Turbo🌪️⚡', '🌌✨Astrum Luminis✨🌌', '🌺🌊Flora Maris🌊🌺', '🌙🔮Luna Divinatrix🔮🌙', '🌟🌿Stella Viridis🌿🌟'
+        '⚡✨Zephyrus Alakazamia✨⚡', '🌟✨Lumina Seraphicus✨🌟', '🌌🌟Astra Eternus🌟🌌',
+        '🌙✨Mysticus Vorpalus✨🌙', '🔥✨Solarius Incantatio✨🔥', '🌪️✨Aquilo Spiralis✨🌪️',
+        '🐉🔥Ignis Draconis🔥🐉', '🌿🌳Veridia Arborum🌳🌿', '🌌⭐Celestis Mirabilis⭐🌌', '🌑🌙Umbra Nocturna🌙🌑',
+        '✨⚡Divinus Fulgor⚡✨', '🌧️🌊Tempestas Fluvius🌊🌧️', '🌍🌱Terra Vitalis🌱🌍', '🦅✨Volatus Levitas✨🦅',
+        '🔮✨Arcanus Omnipotens✨🔮', '💜✨Amethysta Magica✨💜', '🛡️✨Fortis Protego✨🛡️',
+        '❓🌌Enigma Invisus🌌❓', '⚔️🌌Bellum Caelum🌌⚔️', '🌳🌿Sylva Perpetua🌿🌳', '🔥🌌Flamara Infernalis🌌🔥',
+        '✨🌌Aetherius Radiance🌌✨', '🌐🔗Meridianus Nexus🔗🌐', '🌈🌌Spectra Illusionis🌌🌈',
+        '🌌🔮Nexus Portentia🔮🌌', '🕊️🌬️Volucris Velocitas🌬️🕊️', '🔮🌌Mirus Transmutatio🌌🔮',
+        '⚡✨Fulgurante Lumine✨⚡', '🌺🌟Harmonia Elysium🌟🌺', '🌌✨Luminara Effervescens✨🌌',
+        '🌸✨Flora Viventia✨🌸', '🔥🌪️Ignis Turbinis🌪️🔥', '🌟🌌Stellae Infinitas🌌🌟', '⚡🌊Fulgor Aqua🌊⚡',
+        '🌑🦉Umbra Noctua🦉🌑', '🌞🌙Lux Lunaris🌙🌞', '🍃✨Aura Vitalis✨🍃', '🔮🌌Magia Arcana🌌🔮',
+        '🌹✨Rosaceus Lumina✨🌹', '🌌🗝️Cosmos Clavis🗝️🌌', '🌪️🌊Tempestas Mare🌊🌪️', '🔥⚔️Ignis Gladius⚔️🔥',
+        '🌈🔮Iris Divinatio🔮🌈', '💫✨Siderea Splendor✨💫', '🌙🦋Noctis Papilio🦋🌙', '🔥🌿Ignis Herba🌿🔥',
+        '⚡🌪️Fulgur Turbo🌪️⚡', '🌌✨Astrum Luminis✨🌌', '🌺🌊Flora Maris🌊🌺', '🌙🔮Luna Divinatrix🔮🌙',
+        '🌟🌿Stella Viridis🌿🌟'
     ]
 
     # Convert to MD5 hash value

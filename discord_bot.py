@@ -13,7 +13,8 @@ class MyClient(discord.Client):
 
     async def on_ready(self):
         print(f'Logged in as {self.user} (ID: {self.user.id})', flush=True)
-        invite_url = discord.utils.oauth_url(client_id=self.application_id, permissions=discord.Permissions(permissions=2419452944))
+        invite_url = discord.utils.oauth_url(
+            client_id=self.application_id, permissions=discord.Permissions(permissions=2419452944))
         print(f'Invite url is {invite_url}', flush=True)
         print('------', flush=True)
 
@@ -85,7 +86,10 @@ class MyClient(discord.Client):
                     dm_channel = await reaction_member.create_dm()
                     title = f"『{utils.generate_spell(str(attachment.id))}』"
                     color = discord.Colour.from_rgb(127, 0, 32)
-                    embed = discord.Embed(title=title, description="", colour=color, url=message_link)
+                    embed = discord.Embed(title=title,
+                                          description="",
+                                          colour=color,
+                                          url=message_link)
 
                     # Setup prompt field
                     prompt_list = utils.split_prompt(prompts)
@@ -99,12 +103,18 @@ class MyClient(discord.Client):
                     nprompt_list = utils.split_prompt(nprompts)
                     if len(nprompt_list) > 1:
                         for i, nprompt in enumerate(nprompt_list, 1):
-                            embed.add_field(name=f"Negative Prompt {i}", value=nprompt, inline=False)
+                            embed.add_field(name=f"Negative Prompt {i}",
+                                            value=nprompt,
+                                            inline=False)
                     else:
                         embed.add_field(name="Negative Prompt", value=nprompts, inline=False)
 
                     # Setup parameter field
-                    parameter_fields = ["Steps", "CFG scale", "Seed", "Sampler", "Model", "Model hash", "Size", "Version", "Hires upscale", "Hires steps", "Hires upscaler", "Denoising strength"]
+                    parameter_fields = [
+                        "Steps", "CFG scale", "Seed", "Sampler", "Model", "Model hash", "Size",
+                        "Version", "Hires upscale", "Hires steps", "Hires upscaler",
+                        "Denoising strength"
+                    ]
                     embed.add_field(name='Parameters', value='', inline=False)
                     for field in parameter_fields:
                         # check if Hires exist print hires info else break loop
@@ -112,12 +122,15 @@ class MyClient(discord.Client):
                             break
                         elif field == 'Hires upscale':
                             embed.add_field(name='Hires info', value='', inline=False)
-                        embed.add_field(name=field, value=utils.extra_parameter(parameter, f'{field}: '))
+                        embed.add_field(name=field,
+                                        value=utils.extra_parameter(parameter, f'{field}: '))
 
                     # Setup extra field
                     for field in parameter_fields:
-                        extras = extras.replace(f'{field}: {utils.extra_parameter(parameter,f"{field}: ")}, ', "")
-                        extras = extras.replace(f'{field}: {utils.extra_parameter(parameter,f"{field}: ")}', "")
+                        extras = extras.replace(
+                            f'{field}: {utils.extra_parameter(parameter,f"{field}: ")}, ', "")
+                        extras = extras.replace(
+                            f'{field}: {utils.extra_parameter(parameter,f"{field}: ")}', "")
                     extra_list = utils.split_prompt(extras)
                     if len(extra_list) > 1:
                         for i, extra in enumerate(extra_list, 1):
@@ -128,7 +141,8 @@ class MyClient(discord.Client):
                     # Setup other embed elements
                     embed.set_image(url=attachment.url)
                     embed.set_author(name=author_name, icon_url=author_avatar_url)
-                    embed.set_footer(text=f'from「{guild_name}」{channel_name}channel', icon_url=guild_icon_url)
+                    embed.set_footer(text=f'from「{guild_name}」{channel_name}channel',
+                                     icon_url=guild_icon_url)
 
                     # Send DM
                     try:
